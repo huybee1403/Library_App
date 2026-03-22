@@ -21,7 +21,12 @@
     --primary-700: #255589;
     --primary-600: #2c66a2;
     --primary-500: #3477bc; /* Màu dùng cho action chính */
-
+    --primary-400: #3b88d7;
+    --primary-300: #4399f2;
+    --primary-200: #4b5563;
+    --primary-white: #ffffff;
+    --Light_mode-Gray_Scale-40: #8d9094; /* Màu trắng dùng cho text trên nền primary */
+    --primary-red: #e74c3c; /* Màu đỏ dùng cho lỗi */
     /* =========================
      Background Colors
   ========================= */
@@ -37,13 +42,87 @@
     --font-main: "Manrope", sans-serif; /* Font tiêu đề */
     --font-body: "Inter", sans-serif; /* Font nội dung */
 
-    /* =========================
-     Border Radius
-  ========================= */
+    /*-------SPACING-------*/
+    --sp-4: 0.25rem;
+    --sp-6: 0.375rem;
+    --sp-8: 0.5rem;
+    --sp-10: 0.625rem;
+    --sp-12: 0.75rem;
+    --sp-14: 0.875rem;
+    --sp-16: 1rem;
+    --sp-18: 1.125rem;
+    --sp-20: 1.25rem;
+    --sp-24: 1.5rem;
+    --fs-26: 1.625rem;
+    --sp-28: 1.75rem;
+    --sp-30: 1.875rem;
+    --sp-32: 2rem;
+    --sp-36: 2.25rem;
+    --sp-40: 2.5rem;
+    --sp-48: 3rem;
+    --sp-60: 3.75rem;
+    --sp-64: 4rem;
 
-    --radius-sm: 4px;
-    --radius-md: 8px;
-    --radius-lg: 12px;
+    /*-------FONT SIZE-------*/
+    --fs-6: 0.375rem; /* 6px */
+    --fs-8: 0.5rem; /* 8px */
+    --fs-10: 0.625rem; /* 10px */
+    --fs-12: 0.75rem; /* 12px */
+    --fs-14: 0.875rem; /* 14px */
+    --fs-16: 1rem; /* 16px */
+
+    --fs-18: 1.125rem; /* 18px */
+    --fs-20: 1.25rem; /* 20px */
+    --fs-22: 1.375rem; /* 22px */
+    --fs-24: 1.5rem; /* 24px */
+    --fs-26: 1.625rem; /* 26px */
+
+    --fs-28: 1.75rem; /* 28px */
+    --fs-30: 1.875rem; /* 30px */
+    --fs-32: 2rem; /* 32px */
+    --fs-34: 2.125rem; /* 34px */
+    --fs-36: 2.25rem; /* 36px */
+
+    --fs-40: 2.5rem; /* 40px */
+    --fs-44: 2.75rem; /* 44px */
+    --fs-48: 3rem; /* 48px */
+
+    --fs-56: 3.5rem; /* 56px */
+    --fs-64: 4rem; /* 64px */
+    --fs-72: 4.5rem; /* 72px */
+
+    /*-------RADIUS-------*/
+    --radius-4: 0.25rem;
+    --radius-6: 0.375rem;
+    --radius-8: 0.5rem;
+    --radius-10: 0.625rem;
+    --radius-12: 0.75rem;
+    --radius-14: 0.875rem;
+    --radius-16: 1rem;
+    --radius-20: 1.25rem;
+    --radius-24: 1.5rem;
+    --radius-32: 2rem;
+
+    /*-------SHADOW-------*/
+    --box-shadow-primary: 0px 2px 4px 0px rgba(0, 39, 65, 0.2);
+
+    /*-------LINE-HEIGHT-------*/
+    --line-height-16: 1rem;
+    --line-height-20: 1.25rem;
+    --line-height-22: 1.375rem;
+    --line-height-24: 1.5rem;
+    --line-height-32: 2rem;
+    --line-height-40: 2.5rem;
+    --line-height-52: 3.25rem;
+
+    /*-------LETTER SPACING-------*/
+    --letter-spacing-34: 0.0053125rem;
+    --letter-spacing-20: 0.001875rem;
+    --letter-spacing-18: 0.0016875rem;
+    --letter-spacing-16: 0.0125rem;
+    --letter-spacing-14: 0.00875rem;
+    --letter-spacing-16: 0.005rem;
+    --letter-spacing-12: 0.025rem;
 
     /* =========================
      Semantic Status Colors
@@ -79,7 +158,7 @@
 body {
     font-family: var(--font-main);
     background-color: var(--bg-canvas);
-    color: var(--primary-900);
+
     -webkit-font-smoothing: antialiased;
 }
 
@@ -93,27 +172,25 @@ h4 {
     letter-spacing: -0.025em;
 }
 
-/* Link */
-
+img {
+    display: block;
+    max-width: 100%;
+}
+ul {
+    list-style: none;
+    padding: 0;
+}
 a {
+    background-color: transparent;
     text-decoration: none;
-    color: inherit;
 }
-
-/* Button reset */
-
-button {
-    border: none;
-    background: none;
-    cursor: pointer;
-}
-
 /* Input reset */
-
 input,
 textarea,
 select {
     font-family: var(--font-body);
+    background-color: var(--bg-surface);
+    color: rgb(117, 117, 117);
 }
 
 /* =========================================================
@@ -169,22 +246,6 @@ select {
     outline: none;
     border-color: var(--primary-500);
     background-color: white;
-}
-
-/* ======================================
-   CARD COMPONENT
-====================================== */
-
-.card {
-    background: white;
-
-    border-radius: var(--radius-md);
-
-    box-shadow: var(--shadow-sm);
-
-    padding: 1.5rem;
-
-    border: 1px solid #e2e8f0;
 }
 
 /* ======================================
