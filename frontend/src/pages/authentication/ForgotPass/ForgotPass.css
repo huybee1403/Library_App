@@ -97,13 +97,12 @@ label {
     width: 100%;
     display: flex;
     align-items: center;
-
     background: #f3f4f6;
     border: 1px solid #e5e7eb;
     padding: var(--sp-14) var(--sp-16);
     border-radius: var(--radius-8);
     margin-top: var(--sp-6);
-    margin-bottom: var(--sp-16);
+    margin-bottom: var(--sp-12);
     transition: 0.2s;
 }
 

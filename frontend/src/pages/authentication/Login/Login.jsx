@@ -1,8 +1,13 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useAuth } from "../../../contexts/authentication/AuthContext";
+import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
 const Login = () => {
+    const { login } = useAuth();
+    const navigate = useNavigate();
+
     const initialValues = {
         email: "",
         password: "",
@@ -10,13 +15,24 @@ const Login = () => {
     };
 
     const validationSchema = Yup.object({
-        email: Yup.string().required("Email or username is required"),
+        email: Yup.string().email("Email không đúng định dạng").required("Vui lòng nhập email"),
 
-        password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+        password: Yup.string()
+            .min(12, "Mật khẩu phải có ít nhất 12 ký tự")
+            .matches(/[0-9]/, "Mật khẩu phải chứa ít nhất 1 số")
+            .matches(/[!@#$%^&*]/, "Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt")
+            .required("Vui lòng nhập mật khẩu"),
     });
+    const handleSubmit = async (values, { setSubmitting }) => {
+        try {
+            const response = await login(values);
 
-    const handleSubmit = (values) => {
-        console.log(values);
+            console.log("Login successful:", response);
+        } catch (err) {
+            console.error(err.response?.data?.message || "Login failed");
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (
@@ -27,43 +43,46 @@ const Login = () => {
             </div>
 
             <div className="login-card">
-                <h2>Welcome back</h2>
+                <h2>Welcome Back</h2>
                 <p className="subtitle">Please enter your library credentials.</p>
 
                 <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
-                    <Form>
-                        <div className="form-group">
-                            <label>Email or Username</label>
+                    {({ isSubmitting }) => (
+                        <Form>
+                            <div className="form-group">
+                                <label>Email</label>
 
-                            <Field type="text" name="email" placeholder="curator@library.org" />
+                                <Field type="email" name="email" placeholder="curator@library.org" />
 
-                            <ErrorMessage name="email" component="div" className="error" />
-                        </div>
-
-                        <div className="form-group">
-                            <div className="password-row">
-                                <label>Password</label>
-                                <a href="#">Forgot password?</a>
+                                <ErrorMessage name="email" component="div" className="error" />
                             </div>
 
-                            <Field type="password" name="password" placeholder="••••••••" />
+                            <div className="form-group">
+                                <div className="password-row">
+                                    <label>Password</label>
+                                    <a href="/request-reset">Forgot password?</a>
+                                </div>
 
-                            <ErrorMessage name="password" component="div" className="error" />
-                        </div>
+                                <Field type="password" name="password" placeholder="••••••••" />
 
-                        <div className="checkbox">
-                            <Field type="checkbox" name="remember" />
-                            <span>Keep me logged in</span>
-                        </div>
+                                <ErrorMessage name="password" component="div" className="error" />
+                            </div>
 
-                        <button type="submit" className="login-btn">
-                            Access Portal →
-                        </button>
-                    </Form>
+                            <div className="checkbox">
+                                <Field type="checkbox" name="remember" />
+                                <span>Keep me logged in</span>
+                            </div>
+
+                            <button type="submit" className="login-btn" disabled={isSubmitting}>
+                                {isSubmitting ? "Accessing Portal..." : "Access Portal →"}
+                            </button>
+                        </Form>
+                    )}
                 </Formik>
 
                 <div className="secure">
-                    <i className="fa-solid fa-unlock"></i>Secure Administrative Node
+                    <i className="fa-solid fa-unlock"></i>
+                    Secure Administrative Node
                 </div>
             </div>
 

@@ -1,55 +1,100 @@
-const authService = require("../../services/auth.Service");
+const authService = require("../../services/auth.Service.js");
 
-exports.register = async (req, res, next) => {
+exports.register = async (req, res) => {
     try {
         const user = await authService.register(req.body);
-        res.json({ message: "Register success", user });
+
+        res.status(200).json({
+            message: "Register success",
+            user,
+        });
     } catch (err) {
-        next(err);
+        res.status(err.status || 500).json({
+            message: err.message || "Server error",
+        });
     }
 };
 
-exports.login = async (req, res, next) => {
+exports.login = async (req, res) => {
     try {
-        const tokens = await authService.login(req.body);
-        res.json(tokens);
+        const { accessToken, refreshToken, user } = await authService.login(req.body);
+
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "Strict",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+
+        res.status(200).json({
+            accessToken,
+            user,
+            message: "Login success",
+        });
     } catch (err) {
-        next(err);
+        res.status(err.status || 401).json({
+            message: err.message || "Login failed",
+        });
     }
 };
 
-exports.logout = async (req, res, next) => {
+exports.logout = async (req, res) => {
     try {
-        await authService.logout(req.body.refreshToken);
-        res.json({ message: "Logged out" });
+        const refreshToken = req.cookies.refreshToken;
+        console.log(refreshToken);
+
+        if (refreshToken) {
+            await authService.logout(refreshToken);
+        }
+
+        res.clearCookie("refreshToken");
+
+        res.status(200).json({
+            message: "Logged out",
+        });
     } catch (err) {
-        next(err);
+        res.status(err.status || 500).json({
+            message: err.message,
+        });
     }
 };
 
-exports.refreshToken = async (req, res, next) => {
+exports.refreshToken = async (req, res) => {
     try {
-        const token = await authService.refreshToken(req.body.refreshToken);
-        res.json(token);
+        const token = await authService.refreshToken(req.cookies.refreshToken);
+
+        res.status(200).json(token);
     } catch (err) {
-        next(err);
+        res.status(err.status || 401).json({
+            message: err.message || "Invalid refresh token",
+        });
     }
 };
 
-exports.forgotPassword = async (req, res, next) => {
+exports.forgotPassword = async (req, res) => {
     try {
         await authService.forgotPassword(req.body.email);
-        res.json({ message: "Reset mail sent" });
+
+        res.status(200).json({
+            message: "Reset mail sent",
+        });
     } catch (err) {
-        next(err);
+        res.status(err.status || 400).json({
+            message: err.message,
+        });
     }
 };
 
-exports.resetPassword = async (req, res, next) => {
+exports.resetPassword = async (req, res) => {
     try {
         await authService.resetPassword(req.body.token, req.body.password);
-        res.json({ message: "Password reset success" });
+
+        res.status(200).json({
+            message: "Password reset success",
+        });
     } catch (err) {
-        next(err);
+        res.status(err.status || 400).json({
+            message: err.message,
+        });
     }
 };
