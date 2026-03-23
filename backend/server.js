@@ -18,11 +18,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // serve static file (ảnh + pdf)
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Route
 const authRoutes = require("./routes/auth.Routes");
+const bookRoutes = require("./routes/bookRoutes");
+
 //Use Route
 app.use("/api/auth", authRoutes);
+app.use("/api/books", bookRoutes);
 
 // Start server
 const PORT = process.env.PORT || 8080;
