@@ -9,7 +9,7 @@ export default function AppRoutes() {
         <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/request-reset" element={<ForgotPass />} />
+            <Route path="/forgot-password" element={<ForgotPass />} />
             <Route path="/reset-password" element={<ResetPass />} />
         </Routes>
     );

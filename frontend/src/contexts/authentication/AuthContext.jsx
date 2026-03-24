@@ -1,35 +1,42 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useMemo } from "react";
 import { loginAPI, refreshTokenAPI, logoutAPI, registerAPI, resetPasswordAPI, forgotPasswordAPI } from "../../services/api/api";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) || null);
+    const [loading, setLoading] = useState(false);
 
     const login = async (values) => {
-        const res = await loginAPI(values);
+        try {
+            setLoading(true);
 
-        const { accessToken, user } = res;
+            const res = await loginAPI(values);
+            const { accessToken, user } = res;
 
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("user", JSON.stringify(user));
+            localStorage.setItem("accessToken", accessToken);
+            localStorage.setItem("user", JSON.stringify(user));
 
-        setUser(user);
+            setUser(user);
 
-        return res; // QUAN TRỌNG
+            return res;
+        } catch (err) {
+            throw err;
+        } finally {
+            setLoading(false);
+        }
     };
 
     const refreshAccessToken = async () => {
         try {
             const res = await refreshTokenAPI();
-
-            const newToken = res.data.accessToken;
+            const newToken = res.accessToken || res.data?.accessToken;
 
             localStorage.setItem("accessToken", newToken);
 
             return newToken;
         } catch (err) {
-            logout();
+            await logout();
         }
     };
 
@@ -55,25 +62,25 @@ export const AuthProvider = ({ children }) => {
     };
 
     const resetPassword = async (data) => {
-        const res = await resetPasswordAPI(data);
-        return res.data;
+        const res = await resetPasswordAPI(data.token, data.new_password);
+        return res; // ❗ vì API đã return data rồi
     };
 
-    return (
-        <AuthContext.Provider
-            value={{
-                user,
-                login,
-                logout,
-                register,
-                requestResetPassword,
-                resetPassword,
-                refreshAccessToken,
-            }}
-        >
-            {children}
-        </AuthContext.Provider>
+    const value = useMemo(
+        () => ({
+            user,
+            loading,
+            login,
+            logout,
+            register,
+            requestResetPassword,
+            resetPassword,
+            refreshAccessToken,
+        }),
+        [user, loading],
     );
+
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => useContext(AuthContext);

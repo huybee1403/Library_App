@@ -1,8 +1,14 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import "./ResetPass.css";
+import { useAuth } from "../../../contexts/authentication/AuthContext";
+import { useSearchParams } from "react-router-dom";
 
 const ResetPass = () => {
+    const { resetPassword } = useAuth();
+    const [searchParams] = useSearchParams();
+    const token = searchParams.get("token");
+
     const passwordSchema = Yup.object({
         password: Yup.string()
             .min(12, "Mật khẩu phải có ít nhất 12 ký tự")
@@ -14,6 +20,7 @@ const ResetPass = () => {
             .oneOf([Yup.ref("password")], "Mật khẩu xác nhận không khớp")
             .required("Vui lòng xác nhận mật khẩu"),
     });
+
     return (
         <div className="reset-page">
             {/* MAIN */}
@@ -51,11 +58,20 @@ const ResetPass = () => {
                                 confirmPassword: "",
                             }}
                             validationSchema={passwordSchema}
-                            onSubmit={(values) => {
-                                console.log(values);
+                            onSubmit={async (values, { setSubmitting }) => {
+                                try {
+                                    await resetPassword({
+                                        token,
+                                        new_password: values.password,
+                                    });
+                                } catch (err) {
+                                    console.error(err);
+                                } finally {
+                                    setSubmitting(false);
+                                }
                             }}
                         >
-                            {({ values }) => {
+                            {({ values, isSubmitting }) => {
                                 const hasLength = values.password.length >= 12;
                                 const hasNumber = /[0-9]/.test(values.password);
                                 const hasSpecial = /[!@#$%^&*]/.test(values.password);
@@ -67,7 +83,7 @@ const ResetPass = () => {
                                         <div className="input">
                                             <i className="fa-solid fa-lock"></i>
 
-                                            <Field name="password" type="password" placeholder="••••••••••••" />
+                                            <Field name="password" type="password" placeholder="••••••••••••" autoComplete="new-password" />
                                         </div>
 
                                         <ErrorMessage name="password" component="div" className="error" />
@@ -77,7 +93,7 @@ const ResetPass = () => {
                                         <div className="input">
                                             <i className="fa-solid fa-lock"></i>
 
-                                            <Field name="confirmPassword" type="password" placeholder="••••••••••••" />
+                                            <Field name="confirmPassword" type="password" placeholder="••••••••••••" autoComplete="new-password" />
                                         </div>
 
                                         <ErrorMessage name="confirmPassword" component="div" className="error" />
@@ -101,8 +117,8 @@ const ResetPass = () => {
                                             </div>
                                         </div>
 
-                                        <button type="submit" className="reset-btn">
-                                            Update Password →
+                                        <button type="submit" className="reset-btn" disabled={isSubmitting}>
+                                            {isSubmitting ? "Updating..." : "Update Password →"}
                                         </button>
                                     </Form>
                                 );

@@ -14,7 +14,7 @@ export const loginAPI = async (data) => {
 };
 
 export const forgotPasswordAPI = async (data) => {
-    const response = await axios.post(`/auth/request-reset`, data);
+    const response = await axios.post(`/auth/forgot-password`, data);
     return response.data;
 };
 
