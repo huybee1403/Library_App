@@ -23,10 +23,12 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Route
 const authRoutes = require("./routes/auth.Routes");
 const bookRoutes = require("./routes/bookRoutes");
+const borrowRoutes = require("./routes/borrowRoutes");
 
 //Use Route
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
+app.use("/api/borrows", borrowRoutes);
 
 // Start server
 const PORT = process.env.PORT || 8080;

@@ -113,6 +113,22 @@ const initDatabaseTables = async () => {
       )
     `);
 
+        // Tránh đặt trùng cùng một sách cho cùng một người dùng
+        const reservationIndexRows = await db.query(`
+      SELECT COUNT(*) AS total
+      FROM INFORMATION_SCHEMA.STATISTICS
+      WHERE TABLE_SCHEMA = DATABASE()
+        AND TABLE_NAME = 'reservations'
+        AND INDEX_NAME = 'uq_reservations_user_book'
+    `);
+
+        if (!reservationIndexRows[0].total) {
+            await db.query(`
+        CREATE UNIQUE INDEX uq_reservations_user_book
+        ON reservations (user_id, book_id)
+      `);
+        }
+
         /*
       REVIEWS
       Bảng lưu đánh giá và bình luận sách
