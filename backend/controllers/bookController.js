@@ -13,6 +13,30 @@ const bookController = {
         }
     },
 
+    // Tìm kiếm sách theo tên
+    // Chức năng: Tìm kiếm sách theo tên - Mỹ Tâm
+    searchBooks: async (req, res) => {
+        try {
+            // Lấy các tham số từ query URL
+            const { title, category_id, author_id, sort_by, page, limit } = req.query; 
+
+            // Gọi hàm tìm kiếm và truyền thêm bộ lọc, sắp xếp, phân trang (Mỹ Tâm)
+            const result = await Book.searchByTitle(title, category_id, author_id, sort_by, page, limit);
+            
+            res.status(200).json({ 
+                success: true, 
+                data: result.books,
+                pagination: {
+                    totalBooks: result.totalBooks,
+                    totalPages: result.totalPages,
+                    currentPage: result.currentPage
+                }
+            });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    },
+
     // Lấy chi tiết 1 cuốn sách
     getBookById: async (req, res) => {
         try {
@@ -21,6 +45,19 @@ const bookController = {
                 return res.status(404).json({ success: false, message: "Không tìm thấy sách" });
             }
             res.status(200).json({ success: true, data: book });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    },
+
+    // Chức năng: Gợi ý sách liên quan - Mỹ Tâm
+    getRelatedBooks: async (req, res) => {
+        try {
+            const bookId = req.params.id;
+            const limit = req.query.limit || 5; // Mặc định lấy 5 cuốn gợi ý
+            
+            const relatedBooks = await Book.getRelatedBooks(bookId, limit);
+            res.status(200).json({ success: true, data: relatedBooks });
         } catch (error) {
             res.status(500).json({ success: false, message: error.message });
         }
