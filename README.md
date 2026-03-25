@@ -13,7 +13,7 @@ tác giả
 Sắp xếp (A-Z, mới nhất)
 Gợi ý sách (related books)
 Phân trang
----Chưa có frontend
+---Chưa có frontend 
 Test chức năng ---> thêm dữ liệu sách vào dtb -> test postman
 http://localhost:8080/api/books/search?title=tên sách cần tìm
 http://localhost:8080/api/books/search?category_id=16 (tìm bằng id)
