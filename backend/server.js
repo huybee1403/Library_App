@@ -33,23 +33,23 @@ app.use("/api/borrows", borrowRoutes);
 // Start server
 const PORT = process.env.PORT || 8080;
 const startServer = async () => {
-    try {
-        // tạo db nêu chưa có + chọn db
-        await initDatabase();
+  try {
+    // tạo db nêu chưa có + chọn db
+    await initDatabase();
 
-        // kiểm tra kết nối database
-        await testConnection();
+    // kiểm tra kết nối database
+    await testConnection();
 
-        // tạo bảng nếu chưa có
-        await initDatabaseTables();
+    // tạo bảng nếu chưa có
+    await initDatabaseTables();
 
-        app.listen(PORT, () => {
-            console.log(`🚀 Server running on port ${PORT}`);
-            console.log(`🌐 http://localhost:${PORT}`);
-        });
-    } catch (error) {
-        console.error("❌ Server failed to start:", error);
-    }
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+      console.log(`🌐 http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error("❌ Server failed to start:", error);
+  }
 };
 
 startServer();

@@ -1,12 +1,12 @@
 const db = require("../config/db_config");
 
 const initDatabaseTables = async () => {
-    try {
-        /*
+  try {
+    /*
       USERS
       Bảng lưu thông tin người dùng của hệ thống
     */
-        await db.query(`
+    await db.query(`
       CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY, -- id tự tăng
         name VARCHAR(100) NOT NULL, -- tên người dùng
@@ -18,33 +18,33 @@ const initDatabaseTables = async () => {
       )
     `);
 
-        /*
+    /*
       AUTHORS
       Bảng lưu thông tin tác giả
     */
-        await db.query(`
+    await db.query(`
       CREATE TABLE IF NOT EXISTS authors (
         id INT AUTO_INCREMENT PRIMARY KEY, -- id tác giả
         name VARCHAR(150) NOT NULL -- tên tác giả
       )
     `);
 
-        /*
+    /*
       CATEGORIES
       Bảng lưu thể loại sách
     */
-        await db.query(`
+    await db.query(`
       CREATE TABLE IF NOT EXISTS categories (
         id INT AUTO_INCREMENT PRIMARY KEY, -- id thể loại
         name VARCHAR(150) NOT NULL -- tên thể loại
       )
     `);
 
-        /*
+    /*
       BOOKS
       Bảng lưu thông tin sách
     */
-        await db.query(`
+    await db.query(`
       CREATE TABLE IF NOT EXISTS books (
         id INT AUTO_INCREMENT PRIMARY KEY, -- id sách
         title VARCHAR(255) NOT NULL, -- tiêu đề sách
@@ -66,11 +66,11 @@ const initDatabaseTables = async () => {
       )
     `);
 
-        /*
+    /*
       BORROWS
       Bảng lưu thông tin mượn sách
     */
-        await db.query(`
+    await db.query(`
       CREATE TABLE IF NOT EXISTS borrows (
         id INT AUTO_INCREMENT PRIMARY KEY, -- id mượn sách
         user_id INT NOT NULL, -- người mượn
@@ -92,11 +92,11 @@ const initDatabaseTables = async () => {
       )
     `);
 
-        /*
+    /*
       RESERVATIONS
       Bảng lưu thông tin đặt trước sách
     */
-        await db.query(`
+    await db.query(`
       CREATE TABLE IF NOT EXISTS reservations (
         id INT AUTO_INCREMENT PRIMARY KEY, -- id đặt trước
         user_id INT,
@@ -113,8 +113,8 @@ const initDatabaseTables = async () => {
       )
     `);
 
-        // Tránh đặt trùng cùng một sách cho cùng một người dùng
-        const reservationIndexRows = await db.query(`
+    // Tránh đặt trùng cùng một sách cho cùng một người dùng
+    const reservationIndexRows = await db.query(`
       SELECT COUNT(*) AS total
       FROM INFORMATION_SCHEMA.STATISTICS
       WHERE TABLE_SCHEMA = DATABASE()
@@ -122,18 +122,18 @@ const initDatabaseTables = async () => {
         AND INDEX_NAME = 'uq_reservations_user_book'
     `);
 
-        if (!reservationIndexRows[0].total) {
-            await db.query(`
+    if (!reservationIndexRows[0].total) {
+      await db.query(`
         CREATE UNIQUE INDEX uq_reservations_user_book
         ON reservations (user_id, book_id)
       `);
-        }
+    }
 
-        /*
+    /*
       REVIEWS
       Bảng lưu đánh giá và bình luận sách
     */
-        await db.query(`
+    await db.query(`
       CREATE TABLE IF NOT EXISTS reviews (
         id INT AUTO_INCREMENT PRIMARY KEY, -- id đánh giá
         user_id INT,
@@ -152,11 +152,11 @@ const initDatabaseTables = async () => {
       )
     `);
 
-        /*
+    /*
       READING HISTORY
       Bảng lưu lịch sử đọc sách
     */
-        await db.query(`
+    await db.query(`
       CREATE TABLE IF NOT EXISTS reading_history (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT,
@@ -169,11 +169,11 @@ const initDatabaseTables = async () => {
       )
     `);
 
-        /*
+    /*
       REFRESH TOKENS
       Bảng lưu refresh token để cấp lại access token
     */
-        await db.query(`
+    await db.query(`
       CREATE TABLE IF NOT EXISTS refresh_tokens (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NOT NULL,
@@ -187,11 +187,11 @@ const initDatabaseTables = async () => {
       )
     `);
 
-        /*
+    /*
       PASSWORD RESETS
       Bảng lưu token reset mật khẩu
     */
-        await db.query(`
+    await db.query(`
       CREATE TABLE IF NOT EXISTS password_resets (
         id INT AUTO_INCREMENT PRIMARY KEY,
         email VARCHAR(100),
@@ -200,10 +200,10 @@ const initDatabaseTables = async () => {
       )
     `);
 
-        console.log("✅ All tables created successfully");
-    } catch (error) {
-        console.error("❌ Database init error:", error);
-    }
+    console.log("✅ All tables created successfully");
+  } catch (error) {
+    console.error("❌ Database init error:", error);
+  }
 };
 
 module.exports = initDatabaseTables;
