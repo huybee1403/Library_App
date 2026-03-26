@@ -63,8 +63,6 @@ const ForgotPass = () => {
                                 {/* ERROR */}
                                 <ErrorMessage name="email" component="div" className="error-text" />
 
-                                {/* STATUS */}
-                                {status?.error && <div className="error-text">{status.error}</div>}
                                 {status?.success && <div className="success-text">{status.success}</div>}
 
                                 <button type="submit" className="recovery-btn" disabled={isSubmitting}>

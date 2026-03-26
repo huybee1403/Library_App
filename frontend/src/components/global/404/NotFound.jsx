@@ -1,5 +1,5 @@
 import "./NotFound.css";
-import image from "../../../image/404-removebg-preview.png"; // Assuming you have a 404 image in this path
+import image from "../../../images/404-removebg-preview.png"; // Assuming you have a 404 image in this path
 const NotFound = () => {
     return (
         <section className="container">

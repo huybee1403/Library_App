@@ -27,7 +27,7 @@ const Login = () => {
         try {
             const response = await login(values);
 
-            console.log("Login successful:", response);
+            navigate("/admin/dashboard");
         } catch (err) {
             console.error(err.response?.data?.message || "Login failed");
         } finally {
